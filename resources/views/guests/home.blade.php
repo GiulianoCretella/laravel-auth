@@ -8,7 +8,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
 
     </head>
     <body>
@@ -26,23 +26,8 @@
                     @endauth
                 </div>
             @endif
-
-            <div class="content">
-                <div class="title m-b-md text-center display-4">
-                    BoolPress
-                </div>
-
-                <div class="links text-center">
-                    <a href="https://laravel.com/docs" class="px-2">Docs</a>
-                    <a href="https://laracasts.com" class="px-2">Laracasts</a>
-                    <a href="https://laravel-news.com" class="px-2">News</a>
-                    <a href="https://blog.laravel.com" class="px-2">Blog</a>
-                    <a href="https://nova.laravel.com" class="px-2">Nova</a>
-                    <a href="https://forge.laravel.com" class="px-2">Forge</a>
-                    <a href="https://vapor.laravel.com" class="px-2">Vapor</a>
-                    <a href="https://github.com/laravel/laravel" class="px-2">GitHub</a>
-                </div>
-            </div>
+            <div id="root"></div>
         </div>
+        <script src="{{asset('js/front.js')}}" charset="utf-8"></script>
     </body>
 </html>
