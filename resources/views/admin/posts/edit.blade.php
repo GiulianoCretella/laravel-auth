@@ -19,7 +19,7 @@
       @enderror
     </div>
     <div class="form-check">
-      <input type="checkbox" class="form-check-input" id="published" name="published" {{old('published') ? 'checked': ''}}>
+      <input type="checkbox" class="form-check-input" id="published" name="published" {{old('published') ? 'checked': ''}} value="{{'checked' ? 1 : 0}}">
       <label class="form-check-label" for="published">Pubblicato</label>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
