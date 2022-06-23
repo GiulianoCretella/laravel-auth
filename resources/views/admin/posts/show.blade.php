@@ -13,6 +13,8 @@
         <div class="col-6">
             <div class="card p-4">
                 <h4>{{$post->title}}</h4>
+                <p>{{$post->category->name}}</p>
+                <img src="{{$post->image}}" alt="">
                 <p>{{$post->content}}</p>
             </div>
         </div>

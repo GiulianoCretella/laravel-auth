@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Post;
+use App\Category;
 
 class PostController extends Controller
 {
     protected $validation = [
         'title'=> 'required|max:100',
         'content'=> 'required',
+        'published'=>'sometimes|accepted',
+        'image'=>'nullable|image|',
     ];
     /**
      * Display a listing of the resource.
@@ -31,7 +34,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        return view('admin.posts.create',compact('categories'));
     }
 
     /**
@@ -46,15 +50,12 @@ class PostController extends Controller
         $data = $request->all();
         $newPost = new Post();
         $newPost->title = $data['title'];
-        $slug = Str::of($data['title'])->slug("-");
+        $newPost->image = $data['image'];
         $newPost->content = $data['content'];
+        $newPost->category_id = $data['category_id'];
         $newPost->published = isset($data['published']);
-        $count = 1;
-        while(Post::where('slug',$slug)->first()){
-            $slug = Str::of($data['title'])->slug("-")."-{$count}";
-            $count++;
-        };
-        $newPost->slug = $slug;
+        $slug = Str::of($data['title'])->slug("-");
+        $newPost->slug = $this->getSlug($data['title']);
         $newPost->save();
 
         return redirect()->route('admin.posts.show',$newPost->id);
@@ -79,8 +80,9 @@ class PostController extends Controller
      */
     public function edit($id)
     {
+        $categories = Category::all();
         $post=Post::findOrFail($id);
-        return view('admin.posts.edit', compact('post'));
+        return view('admin.posts.edit', compact('post','categories'));
     }
 
     /**
@@ -95,8 +97,15 @@ class PostController extends Controller
         $request->validate($this->validation);
         $data = $request->all();
         $post = Post::findOrFail($id);
-        $post->title = $data['title'];
-        $post->content = $data['content'];
+        if($post->title != $data['title']){
+            $post->title = $data['title']; 
+            $slug = Str::of($data['title'])->slug("-");
+            if($slug != $post->slug){
+                $post->slug = $this->getSlug($post->title);
+            }
+        }
+        $post->content = $data['content'];+
+        $post->category_id = $data['category_id'];
         $post->published = isset($data['published']);
         $post->update($data);
 
@@ -114,5 +123,16 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->delete();
         return redirect()->route('admin.posts.index');
+    }
+    public function getSlug($title)
+    {
+        $slug = Str::of($title)->slug("-");
+        $count = 1;
+
+        while(Post::where('slug',$slug)->first()){
+            $slug = Str::of($data['title'])->slug("-")."-{$count}";
+            $count++;
+        };
+        return $slug;
     }
 }
